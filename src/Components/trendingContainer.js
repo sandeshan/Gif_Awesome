@@ -129,7 +129,7 @@ export default class Trending extends React.Component {
 }
 
 function modalSize(_width) {
-    var width = parseInt(_width);
+    let width = parseInt(_width);
 
     return (width > 520 ? width : 520);
 }
