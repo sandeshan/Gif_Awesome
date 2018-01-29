@@ -94,10 +94,11 @@ export default class SearchBox extends React.Component {
 
                 <Modal
                     title='Your Awesome Gif!'
+                    width={this.state.selectedGif !== null ? modalSize(this.state.selectedGif.images.original.width) + 50 : 520}
                     visible={this.state.modalVisible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}>
-                    <div>
+                    <div className="gif-modal-body">
                         <img alt="example" src={this.state.selectedGif !== null ? this.state.selectedGif.images.original.webp : ''} />
                         <br /><br />
                         <Button.Group size="large">
@@ -118,4 +119,10 @@ export default class SearchBox extends React.Component {
             </div>
         );
     }
+}
+
+function modalSize(_width) {
+    var width = parseInt(_width);
+
+   return (width > 520 ? width : 520);
 }

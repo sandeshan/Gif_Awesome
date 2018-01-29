@@ -1,7 +1,7 @@
 {
-  "name": "express-react-starter",
-  "version": "0.1.0",
-  "private": true,
+  "name": "gify-server",
+  "version": "1.0.0",
+  "main": "server.js",
   "dependencies": {
     "body-parser": "^1.17.2",
     "cookie-parser": "^1.4.3",
@@ -11,6 +11,6 @@
     "jade": "^1.11.0"
   },
   "scripts": {
-    "start": "./server.js"
+    "start": "node server.js"
   }
 }
