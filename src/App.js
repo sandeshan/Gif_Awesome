@@ -25,7 +25,7 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>{this.state.message}</h2>
+          <h2 style={{color: '#ffffff' }}>Awesome Gif Explorer</h2>
         </div>
         <Trending />
       </div>
