@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import logo from './logo.svg';
+import logo from './Images/logo.gif';
+import { Tabs, Icon } from 'antd';
 import 'antd/dist/antd.css';
 import './App.css';
 
 import Trending from './Components/trendingContainer';
+import Search from './Components/searchContainer';
 
-const API_KEY = 'qx0xpwyBU31bCqwFvSxPGPh643xlVTfo';
+const TabPane = Tabs.TabPane;
 
 class App extends Component {
   constructor() {
@@ -27,7 +29,17 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2 style={{color: '#ffffff' }}>Awesome Gif Explorer</h2>
         </div>
-        <Trending />
+        <Tabs defaultActiveKey="1" size="large">
+          <TabPane tab={<span><Icon type="line-chart" />Trending</span>} key="1">
+            <Trending />
+          </TabPane>
+          <TabPane tab={<span><Icon type="search" />Search</span>} key="2">
+            <Search />
+          </TabPane>
+          <TabPane tab={<span><Icon type="heart" />Favorites</span>} key="3">
+            Favorites
+          </TabPane>
+        </Tabs>
       </div>
     );
   }

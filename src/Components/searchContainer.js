@@ -1,15 +1,17 @@
 import React from 'react';
-
 import { Card, Col, Row } from 'antd';
 import { Modal } from 'antd';
 import { Button, Icon } from 'antd';
+import { Input } from 'antd';
+
+const Search = Input.Search;
 
 const baseURL = 'https://api.giphy.com/v1';
 const API_KEY = 'qx0xpwyBU31bCqwFvSxPGPh643xlVTfo';
 const numGifs = 60;
 const rating = 'PG';
 
-export default class Trending extends React.Component {
+export default class SearchBox extends React.Component {
 
     constructor() {
         super();
@@ -18,27 +20,21 @@ export default class Trending extends React.Component {
             modalVisible: false,
             gifs: [],
             gifCards: [],
-            selectedGif: null,
-            loading: false
+            selectedGif: null
         };
     }
 
-    componentDidMount() {
-        this.fetchLatest();
-    }
-
-    fetchLatest = () => {
-        fetch(baseURL + '/gifs/trending?api_key=' + API_KEY + '&limit=' + numGifs + '&rating=' + rating)
+    fetchSearch = (query) => {
+        fetch(baseURL + '/gifs/search?api_key=' + API_KEY + '&q=' + query + '&limit=' + numGifs + '&rating=' + rating + '&offset=0&lang=en')
             .then(response => response.json())
             .then(json => this.setState({
-                loading: false,
                 gifs: json.data
-             }));
+            }));
     }
 
     showModal = (index) => {
         this.setState({
-            selectedGif: this.state.gifs[index],            
+            selectedGif: this.state.gifs[index],
             modalVisible: true,
         });
     }
@@ -54,14 +50,13 @@ export default class Trending extends React.Component {
         });
     }
 
-    refresh = () => {
-        console.log('refersh clicked');
-        this.setState({ 
-            loading: true,
+    search = (query) => {
+        console.log('search');
+        this.setState({
             gifs: [],
             gifCards: []
-         });
-        this.fetchLatest();
+        });
+        this.fetchSearch(query);
     }
 
     render() {
@@ -79,23 +74,21 @@ export default class Trending extends React.Component {
                 </Col>
             );
             if (index + 1 % 5 === 0) {
-                this.state.gifCards.push(<br/>);
+                this.state.gifCards.push(<br />);
             }
         }.bind(this));
-        
+
         return (
 
-            <div className="Trending-container">
+            <div className="Search-container">
                 <Row>
-                    <Button 
-                        type="primary" 
-                        loading={this.state.loading} 
-                        onClick={this.refresh.bind(this)}
-                        className="refresh-btn">
-                        Click to Refresh
-                    </Button>
+                    <Search
+                        placeholder="input search text"
+                        onSearch={value => this.search(value)}
+                        enterButton
+                        className="search-input"/>
                 </Row>
-                <br/>
+                <br />
 
                 {this.state.gifCards}
 

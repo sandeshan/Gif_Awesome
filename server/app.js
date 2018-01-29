@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const index = require('./routes/index');
+const gify = require('./routes/gify');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use('/api', index);
+app.use('/gify', gify);
 app.get('*', (req, res) => {
   res.sendFile('build/index.html', { root: global });
 });

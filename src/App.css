@@ -3,8 +3,8 @@
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+  /* animation: App-logo-spin infinite 20s linear; */
+  height: 90px;
 }
 
 .App-header {
@@ -16,6 +16,45 @@
 
 .App-intro {
   font-size: large;
+}
+
+.Trending-container {
+  position: fixed;
+  width: 100%;
+  height: calc(100vh - 220px);
+  overflow-y: auto;
+}
+
+.Search-container {
+  position: fixed;
+  width: 100%;
+  height: calc(100vh - 220px);
+  overflow-y: auto;
+}
+
+.refresh-btn {
+  width: 95%;
+}
+
+.search-input {
+  width: 95%;
+}
+
+*::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+  background-color: #F5F5F5;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #555;
 }
 
 @keyframes App-logo-spin {
