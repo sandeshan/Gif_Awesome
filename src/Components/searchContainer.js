@@ -3,8 +3,13 @@ import { Card, Col, Row } from 'antd';
 import { Modal } from 'antd';
 import { Button, Icon } from 'antd';
 import { Input } from 'antd';
+import { AutoComplete } from 'antd';
+
+import util from '../utilities';
 
 const Search = Input.Search;
+const Option = AutoComplete.Option;
+const OptGroup = AutoComplete.OptGroup;
 
 const baseURL = 'https://api.giphy.com/v1';
 const API_KEY = 'qx0xpwyBU31bCqwFvSxPGPh643xlVTfo';
@@ -18,6 +23,7 @@ export default class SearchBox extends React.Component {
 
         this.state = {
             modalVisible: false,
+            dataSource: [],
             gifs: [],
             gifCards: [],
             selectedGif: null
@@ -50,8 +56,28 @@ export default class SearchBox extends React.Component {
         });
     }
 
-    search = (query) => {
-        console.log('search');
+    handleSearch = (value) => {        
+
+        if(value) {
+            var proxyUrl = 'https://damp-harbor-81623.herokuapp.com/',
+                targetUrl = 'https://giphy.com/ajax/tags/search/?q=' + value;
+            fetch(proxyUrl + targetUrl)
+                .then(response => response.json())
+                .then(json => this.setState({
+                    dataSource: json.result.objects
+                }))
+                .catch(e => {
+                    return e;
+                });
+        }
+        else {
+            this.setState({
+                dataSource: []
+            });
+        }
+    }
+
+    onSelect = (query) => {
         this.setState({
             gifs: [],
             gifCards: []
@@ -60,6 +86,14 @@ export default class SearchBox extends React.Component {
     }
 
     render() {
+
+        let index = 0;
+
+        const options = this.state.dataSource.map(object => (
+            <Option key={object.name_encoded + index++} value={object.name_encoded}>
+                {object.name}
+            </Option>
+        ));
 
         this.state.gifCards = [];
 
@@ -81,12 +115,15 @@ export default class SearchBox extends React.Component {
         return (
 
             <div className="Search-container">
-                <Row>
-                    <Search
-                        placeholder="input search text"
-                        onSearch={value => this.search(value)}
-                        enterButton
-                        className="search-input"/>
+                <Row className="fixed-bar-div">
+                    <AutoComplete
+                        dataSource={options}
+                        size="large"
+                        style={{ width: '75%' }}
+                        onSelect={this.onSelect}
+                        onSearch={this.handleSearch}
+                        placeholder="input here"
+                    />
                 </Row>
                 <br />
 
@@ -94,7 +131,7 @@ export default class SearchBox extends React.Component {
 
                 <Modal
                     title='Your Awesome Gif!'
-                    width={this.state.selectedGif !== null ? modalSize(this.state.selectedGif.images.original.width) + 50 : 520}
+                    width={this.state.selectedGif !== null ? util.modalSize(this.state.selectedGif.images.original.width) + 50 : 520}
                     visible={this.state.modalVisible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}>
@@ -105,12 +142,12 @@ export default class SearchBox extends React.Component {
                             <Button
                                 type="primary"
                                 href={this.state.selectedGif !== null ? this.state.selectedGif.images.original.url : '#'}>
-                                <Icon type="download" />Download Gif
+                                <Icon type="download" />Download Gif {this.state.selectedGif !== null ? '(' + util.formatFileSize(this.state.selectedGif.images.original.size) + ')' : ''}
                             </Button>
                             <Button
                                 type="primary"
                                 href={this.state.selectedGif !== null ? this.state.selectedGif.images.original.webp : '#'}>
-                                Download Webp<Icon type="download" />
+                                Download Webp  {this.state.selectedGif !== null ? '(' + util.formatFileSize(this.state.selectedGif.images.original.webp_size) + ')' : ''} <Icon type="download" />
                             </Button>
                         </Button.Group>
                     </div>
@@ -119,10 +156,4 @@ export default class SearchBox extends React.Component {
             </div>
         );
     }
-}
-
-function modalSize(_width) {
-    let width = parseInt(_width);
-
-   return (width > 520 ? width : 520);
 }

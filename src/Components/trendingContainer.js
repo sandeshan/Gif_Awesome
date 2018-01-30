@@ -1,8 +1,9 @@
 import React from 'react';
-
 import { Card, Col, Row } from 'antd';
 import { Modal } from 'antd';
 import { Button, Icon } from 'antd';
+
+import util from '../utilities';
 
 const baseURL = 'https://api.giphy.com/v1';
 const API_KEY = 'qx0xpwyBU31bCqwFvSxPGPh643xlVTfo';
@@ -55,7 +56,6 @@ export default class Trending extends React.Component {
     }
 
     refresh = () => {
-        console.log('refersh clicked');
         this.setState({ 
             loading: true,
             gifs: [],
@@ -73,6 +73,7 @@ export default class Trending extends React.Component {
                 <Col span={6} key={gifDetails.id}>
                     <Card
                         hoverable
+                        style={{ maxWidth: 500 }}
                         cover={<img alt="example" src={gifDetails.images.fixed_width.webp} />}
                         onClick={() => this.showModal(index)}>
                     </Card>
@@ -86,9 +87,10 @@ export default class Trending extends React.Component {
         return (
 
             <div className="Trending-container">
-                <Row>
+                <Row className="fixed-bar-div">
                     <Button 
                         type="primary" 
+                        size="large"
                         loading={this.state.loading} 
                         onClick={this.refresh.bind(this)}
                         className="refresh-btn">
@@ -101,7 +103,7 @@ export default class Trending extends React.Component {
 
                 <Modal
                     title='Your Awesome Gif!'
-                    width={this.state.selectedGif !== null ? modalSize(this.state.selectedGif.images.original.width) + 50 : 520}
+                    width={this.state.selectedGif !== null ? util.modalSize(this.state.selectedGif.images.original.width) + 50 : 520}
                     visible={this.state.modalVisible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}>
@@ -111,13 +113,15 @@ export default class Trending extends React.Component {
                         <Button.Group size="large">
                             <Button
                                 type="primary"
-                                href={this.state.selectedGif !== null ? this.state.selectedGif.images.original.url : '#'}>
-                                <Icon type="download" />Download Gif
+                                href={this.state.selectedGif !== null ? this.state.selectedGif.images.original.url : '#'}
+                                target="_blank">
+                                <Icon type="download" />Download Gif {this.state.selectedGif !== null ? '(' + util.formatFileSize(this.state.selectedGif.images.original.size) + ')' : ''}
                             </Button>
                             <Button
                                 type="primary"
-                                href={this.state.selectedGif !== null ? this.state.selectedGif.images.original.webp : '#'}>
-                                Download Webp<Icon type="download" />
+                                href={this.state.selectedGif !== null ? this.state.selectedGif.images.original.webp : '#'}
+                                target="_blank">
+                                Download Webp  {this.state.selectedGif !== null ? '(' + util.formatFileSize(this.state.selectedGif.images.original.webp_size) + ')' : ''} <Icon type="download" />
                             </Button>
                         </Button.Group>
                     </div>
@@ -126,10 +130,4 @@ export default class Trending extends React.Component {
             </div>
         );
     }
-}
-
-function modalSize(_width) {
-    let width = parseInt(_width);
-
-    return (width > 520 ? width : 520);
 }
